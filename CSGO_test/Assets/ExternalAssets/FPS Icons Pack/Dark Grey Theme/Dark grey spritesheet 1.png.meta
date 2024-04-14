@@ -84,7 +84,7 @@ TextureImporter:
       213: 21300052
     second: DGT Health
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -101,10 +101,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -143,6 +145,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -154,6 +158,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -166,6 +171,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -748,9 +780,36 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      DGT Bullet 1: 21300000
+      DGT Bullet 10: 21300018
+      DGT Bullet 2: 21300002
+      DGT Bullet 3: 21300004
+      DGT Bullet 4: 21300006
+      DGT Bullet 5: 21300008
+      DGT Bullet 6: 21300010
+      DGT Bullet 7: 21300012
+      DGT Bullet 8: 21300014
+      DGT Bullet 9: 21300016
+      DGT Explosive: 21300046
+      DGT Explosive remote: 21300048
+      DGT Handgrenade 1: 21300020
+      DGT Handgrenade 2: 21300022
+      DGT Handgrenade 3: 21300026
+      DGT Handgrenade 4: 21300028
+      DGT Handgrenade 5: 21300030
+      DGT Handgrenade 6: 21300032
+      DGT Handgrenade 7: 21300034
+      DGT Handgrenade 8: 21300036
+      DGT Handgrenade 9: 21300038
+      DGT Health: 21300052
+      DGT Healthpack: 21300050
+      DGT Jet 1: 21300042
+      DGT Jet 2: 21300044
+      DGT Tank 1: 21300024
+      DGT Tank 2: 21300040
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
