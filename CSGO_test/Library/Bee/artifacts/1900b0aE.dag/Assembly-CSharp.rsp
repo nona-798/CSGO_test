@@ -370,6 +370,7 @@
 "Assets/Test/Scripts/MemoryPool.cs"
 "Assets/Test/Scripts/PlayerAnimationController.cs"
 "Assets/Test/Scripts/PlayerController.cs"
+"Assets/Test/Scripts/PlayerHUD.cs"
 "Assets/Test/Scripts/RotateToMouse.cs"
 "Assets/Test/Scripts/Status.cs"
 "Assets/Test/Scripts/WeaponAssaultRifle.cs"

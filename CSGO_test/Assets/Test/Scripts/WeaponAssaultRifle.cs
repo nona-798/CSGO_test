@@ -1,8 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
+[System.Serializable]
+public class AmmoEvent : UnityEngine.Events.UnityEvent<int, int> { }
 public class WeaponAssaultRifle : MonoBehaviour
 {
+    [HideInInspector]
+    public AmmoEvent                    onAmmoEvent = new AmmoEvent();
+
     [Header("Fire Effects")]
     [SerializeField]
     private GameObject                  fireFlashEffect;               // 총구 이펙트 (on/off)
@@ -27,11 +32,16 @@ public class WeaponAssaultRifle : MonoBehaviour
     private PlayerAnimationController   anim;                          // 애니메이션 재생 제어
     private CasingMemoryPool            casingMemoryPool;              // 탄피 생성 후 활성/비활성 관리
 
+    // 외부에서 필요한 정보를 열람하기 위해 정의한 Get 프로퍼티
+    public WeaponName WeaponName => weaponSetting.weaponName;
     private void Awake()
     {
         audioSource      = GetComponent<AudioSource>();
         anim             = GetComponentInParent<PlayerAnimationController>();
         casingMemoryPool = GetComponent<CasingMemoryPool>();
+
+        // 처음 탄약 수는 최대로 설정
+        weaponSetting.currentAmmo = weaponSetting.maxAmmo;
     }
     private void OnEnable()
     {
@@ -39,6 +49,9 @@ public class WeaponAssaultRifle : MonoBehaviour
         PlaySound(audioClipTakeOutRifle);
         // 총구 이펙트 오브젝트 비활성화
         fireFlashEffect.SetActive(false);
+
+        // 무기가 활성화될 때 해당 무기의 탄약 수 정보를 갱신한다.
+        onAmmoEvent.Invoke(weaponSetting.currentAmmo, weaponSetting.maxAmmo);
     }
 
     public void StartWeaponAction(int type = 0)
@@ -85,6 +98,17 @@ public class WeaponAssaultRifle : MonoBehaviour
 
             // 공격 주기가 되어야 공격할 수 있도록 하기 위해 현재시간 저장
             lastAttackTime = Time.time;
+
+            // 탄약 수가 모자라면 공격 불가능
+            if(weaponSetting.currentAmmo <= 0)
+            {
+                return;
+            }
+
+            // 공격시 currentAmmo -= 1, 탄약 수 UI 업데이트
+            weaponSetting.currentAmmo--;
+            onAmmoEvent.Invoke(weaponSetting.currentAmmo, weaponSetting.maxAmmo);
+
             // 무기 애니메이션 재생
             anim.Play("Fire", -1, 0);
             // 총구 이펙트 재생
