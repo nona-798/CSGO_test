@@ -7,9 +7,15 @@ public class WeaponAssaultRifle : MonoBehaviour
     [SerializeField]
     private GameObject                  fireFlashEffect;               // 총구 이펙트 (on/off)
 
+    [Header("Spawn Position")]
+    [SerializeField]
+    private Transform                   casingSpwanPos;                // 탄피 생성 위치
+
     [Header("Audio Clips")]
     [SerializeField]
     private AudioClip                   audioClipTakeOutRifle;         // 총기 장착 사운드
+    [SerializeField]
+    private AudioClip                   audioClipFire;                 // 발사 사운드
 
     [Header("Weapon Setting")]
     [SerializeField]
@@ -19,11 +25,13 @@ public class WeaponAssaultRifle : MonoBehaviour
 
     private AudioSource                 audioSource;                   // 사운드 재생 컴포넌트
     private PlayerAnimationController   anim;                          // 애니메이션 재생 제어
+    private CasingMemoryPool            casingMemoryPool;              // 탄피 생성 후 활성/비활성 관리
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
-        anim        = GetComponent<PlayerAnimationController>();
+        audioSource      = GetComponent<AudioSource>();
+        anim             = GetComponentInParent<PlayerAnimationController>();
+        casingMemoryPool = GetComponent<CasingMemoryPool>();
     }
     private void OnEnable()
     {
@@ -81,6 +89,10 @@ public class WeaponAssaultRifle : MonoBehaviour
             anim.Play("Fire", -1, 0);
             // 총구 이펙트 재생
             StartCoroutine("OnFireFlashEffect");
+            // 발사 사운드 재생
+            PlaySound(audioClipFire);
+            // 탄피 생성
+            casingMemoryPool.SpawnCasing(casingSpwanPos.position, transform.right);
         }
     }
     private IEnumerator OnFireFlashEffect()

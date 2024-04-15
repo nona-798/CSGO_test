@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         status              = GetComponent<Status>();
         anim                = GetComponent<PlayerAnimationController>();
         audioSource         = GetComponent<AudioSource>();
-        weapon              = GetComponent<WeaponAssaultRifle>();
+        weapon              = GetComponentInChildren<WeaponAssaultRifle>();
     }
 
     private void Update()
