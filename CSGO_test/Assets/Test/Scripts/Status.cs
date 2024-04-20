@@ -10,6 +10,7 @@ public class Status : MonoBehaviour
     [SerializeField]
     private float runSpeed;
 
+    // 속도 값 SetGet 변수
     public float WalkSpeed => walkSpeed;
     public float RunSpeed => runSpeed;
 }
