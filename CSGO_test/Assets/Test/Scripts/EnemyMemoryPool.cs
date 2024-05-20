@@ -4,19 +4,21 @@ using UnityEngine;
 public class EnemyMemoryPool : MonoBehaviour
 {
     [SerializeField]
-    private GameObject enemySpawnPointPrefab;
-    [SerializeField]
-    private GameObject enemyPrefab;
-    [SerializeField]
-    private float enemySpawnTime = 1;
-    [SerializeField]
-    private float enemySpawnLatency = 1;
+    private Transform target;                               // 적의 목표 (플레이어)
+    [SerializeField]                                        
+    private GameObject enemySpawnPointPrefab;               // 적이 등장하기 전 적의 등장 위치
+    [SerializeField]                                        
+    private GameObject enemyPrefab;                         // 생성되는 적 프리팹
+    [SerializeField]                                        
+    private float enemySpawnTime = 1;                       // 적 생성 주기
+    [SerializeField]                                        
+    private float enemySpawnLatency = 1;                    // 타일 생성 후 적이 등장하기까지의 대기 시간
 
-    private MemoryPool spawnPointMemoryPool;
-    private MemoryPool enemyMemoryPool;
+    private MemoryPool spawnPointMemoryPool;                // 적 등장 위치를 알려주는 오브젝트 생성, 활성/비활성 관리
+    private MemoryPool enemyMemoryPool;                     // 적 생성, 활성/비활성 관리
 
-    private int enemySpawnAtOnceOfNum = 1;
-    private Vector2Int mapSize = new Vector2Int(100, 100);
+    private int enemySpawnAtOnceOfNum = 1;                  // 동시에 생성되는 적의 숫자
+    private Vector2Int mapSize = new Vector2Int(100, 100);  // 맵 크기
 
     private void Awake()
     {
@@ -58,6 +60,8 @@ public class EnemyMemoryPool : MonoBehaviour
         // 적 오브젝트를 생성하고, 적의 위치를 Point의 위치로 설정
         GameObject item = enemyMemoryPool.ActivatePoolItem();
         item.transform.position = point.transform.position;
+
+        item.GetComponent<EnemyFSM>().Setup(target);
 
         // 타일 오브젝트를 비활성화
         spawnPointMemoryPool.DeactivatePoolItem(point);

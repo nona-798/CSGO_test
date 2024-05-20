@@ -8,7 +8,8 @@ public class PlayerHUD : MonoBehaviour
     [Header("Components")]
     [SerializeField]
     private WeaponAssaultRifle  weapon;                 // 현재 정보가 출력되는 무기
-
+    [SerializeField]
+    private Status              status;                 // 플레이어의 상태 (이동속도, 체력)
     [Header("Weapon Base")]
     [SerializeField]
     private TextMeshProUGUI     txtWeaponName;          // 무기 이름
@@ -23,11 +24,19 @@ public class PlayerHUD : MonoBehaviour
 
     [Header("Magazine")]
     [SerializeField]
-    private GameObject magazineUIPrefab;                 // 탄창 UI 프리팹
+    private GameObject          magazineUIPrefab;       // 탄창 UI 프리팹
     [SerializeField]
-    private Transform magazineParent;                    // 탄창 UI가 배치되는 Panel
+    private Transform           magazineParent;         // 탄창 UI가 배치되는 Panel
 
-    private List<GameObject> magazineList;              // 탄창 UI 리스트
+    private List<GameObject>    magazineList;           // 탄창 UI 리스트
+
+    [Header("HP & BloodScreen UI")]
+    [SerializeField]
+    private TextMeshProUGUI     textHP;                 // 플레이어의 체력을 출력하는 Text
+    [SerializeField]
+    private Image               imageBloodScreen;       // 플레이어가 공격받았을 때 화면에 표시되는 Image
+    [SerializeField]
+    private AnimationCurve      curveBloodScreen;
 
     private void Awake()
     {
