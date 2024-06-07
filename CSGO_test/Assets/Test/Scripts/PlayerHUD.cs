@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,6 +48,7 @@ public class PlayerHUD : MonoBehaviour
         // Invoke() 메소드가 호출될 때 등록된 메소드(매개변수)가 실행됨
         weapon.onAmmoEvent.AddListener(UpdateAmmoHUD);
         weapon.onMagazineEvent.AddListener(UpdateMagazineHUD);
+        status.onHPEvent.AddListener(UpdateHPHUD);
     }
     private void SetupWeapon()
     {
@@ -87,6 +89,29 @@ public class PlayerHUD : MonoBehaviour
         for (int i = 0; i < curMag; ++i)
         {
             magazineList[i].SetActive(true);
+        }
+    }
+    private void UpdateHPHUD(int previous, int current)
+    {
+        textHP.text = "HP " + current;
+        if(previous - current > 0)
+        {
+            StopCoroutine("OnBloodScreen");
+            StartCoroutine("OnBloodScreen");
+        }
+    }
+    private IEnumerator OnBloodScreen()
+    {
+        float percent = 0;
+        while(percent < 1)
+        {
+            percent += Time.deltaTime;
+
+            Color color = imageBloodScreen.color;
+            color.a = Mathf.Lerp(1, 0, curveBloodScreen.Evaluate(percent));
+            imageBloodScreen.color = color;
+
+            yield return null;
         }
     }
 }

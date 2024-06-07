@@ -6,6 +6,7 @@ public class EnemyProjectile : MonoBehaviour
 {
     private MovementTransform movement;
     private float projectileDistance = 30;
+    private int damage = 5;
     // Start is called before the first frame update
     public void Setup(Vector3 pos)
     {
@@ -33,8 +34,8 @@ public class EnemyProjectile : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            Debug.Log("Player Hit");
-
+            //Debug.Log("Player Hit");
+            other.GetComponent<PlayerController>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

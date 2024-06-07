@@ -1,5 +1,5 @@
 using UnityEngine;
-public enum ImpactType { Normal = 0, Obstacle, Enemy}
+public enum ImpactType { Normal = 0, Obstacle, Enemy, }
 public class ImpactMemoryPool : MonoBehaviour
 {
     [SerializeField]
