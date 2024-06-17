@@ -261,6 +261,10 @@ public class WeaponAssaultRifle : MonoBehaviour
             {
                 hit.transform.GetComponent<EnemyFSM>().TakeDamage(weaponSetting.damage);
             }
+            else if( hit.transform.CompareTag("InteractionObject"))
+            {
+                hit.transform.GetComponent<InteractionObject>().TakeDamage(weaponSetting.damage);
+            }
         }
         Debug.DrawRay(bulletSpwanPos.position, atkDir * weaponSetting.attackDis, Color.blue);
     }
