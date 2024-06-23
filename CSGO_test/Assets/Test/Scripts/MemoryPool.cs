@@ -21,6 +21,9 @@ public class MemoryPool : MonoBehaviour
     public int MaxCount => maxCount;             // 외부에서 현재 리스트에 등록되어 있는 오브젝트 개수 확인을 위한 프로퍼티
     public int ActiveCount => activeCount;       // 외부에서 현재 활성화되어 있는 오브젝트 개수 확을 위한 프로퍼티
 
+    /// <summary> 오브젝트가 임시로 보관되는 위치 </summary>
+    private Vector3 tempPos = new Vector3(48, 1, 48);
+
     public MemoryPool(GameObject poolObject)
     {
         maxCount = 0;
@@ -31,7 +34,7 @@ public class MemoryPool : MonoBehaviour
 
         InstatiateObjects();
     }
-    // increaseCount 단위로 오브젝트를 생성
+    /// <summary> increaseCount 단위로 오브젝트를 생성 </summary>
     public void InstatiateObjects()
     {
         maxCount += increaseCount;
@@ -42,12 +45,13 @@ public class MemoryPool : MonoBehaviour
 
             poolItem.isActive = false;
             poolItem.gameObject = GameObject.Instantiate(poolObject);
+            poolItem.gameObject.transform.position = tempPos;
             poolItem.gameObject.SetActive(false);
 
             poolItemList.Add(poolItem);
         }
     }
-    // 현재 관리중인(활성/비활성) 모든 오브젝트를 삭제
+    ///<summary> 현재 관리중인(활성/비활성) 모든 오브젝트를 삭제 </summary>
     public void DestroyObjects()
     {
         if (poolItemList == null) return;
@@ -59,8 +63,8 @@ public class MemoryPool : MonoBehaviour
         }
         poolItemList.Clear();
     }
-    // poolItemList에 저장되어 있는 오브젝트를 활성화해서 사용
-    // 현재 모든 오브젝트가 사용중이면 InstantiateObjects()로 추가 생성
+    /// <summary> poolItemList에 저장되어 있는 오브젝트를 활성화해서 사용.
+    /// 현재 모든 오브젝트가 사용중이면 InstantiateObjects()로 추가 생성 </summary>
     public GameObject ActivatePoolItem()
     {
         if (poolItemList == null) return null;
@@ -88,7 +92,7 @@ public class MemoryPool : MonoBehaviour
         return null;
     }
 
-    // 현재 사용이 완료된 오브젝트를 비활성화 상태로 설정
+    /// <summary> 현재 사용이 완료된 오브젝트를 비활성화 상태로 설정 </summary>
     public void DeactivatePoolItem(GameObject removeObject)
     {
         if (poolItemList == null || removeObject == null) return;
@@ -102,6 +106,7 @@ public class MemoryPool : MonoBehaviour
             {
                 activeCount--;
 
+                poolItem.gameObject.transform.position = tempPos;
                 poolItem.isActive = false;
                 poolItem.gameObject.SetActive(false);
 
@@ -110,7 +115,7 @@ public class MemoryPool : MonoBehaviour
         }
     }
 
-    // 게임에 사용중인 모든 오브젝트를 비활성화 상태로 설정
+    /// <summary> 게임에 사용중인 모든 오브젝트를 비활성화 상태로 설정 </summary> 
     public void DeactivateAllPoolItem()
     {
         if (poolItemList == null) return;
@@ -122,6 +127,7 @@ public class MemoryPool : MonoBehaviour
 
             if(poolItem.gameObject != null && poolItem.isActive == true)
             {
+                poolItem.gameObject.transform.position = tempPos;
                 poolItem.isActive = false;
                 poolItem.gameObject.SetActive(false);
             }

@@ -4,7 +4,7 @@
 // ! [System.Serializable]을 이용해 직렬화하지 않으면 다른 클래스의 변수로 생성되었을 때
 //    Inspector View에 멤버 변수의 목록이 뜨지 않는다.
 // ! 구조체(struct)는 스택영역, 클래스(class)는 힙 영역에 메모리 할당됨 
-public enum WeaponName {  AssaultRifle = 0  }
+public enum WeaponName {  AssaultRifle = 0, Glock17, CombatKnife, HandGrenade  }
 
 [System.Serializable]
 public struct WeaponSetting

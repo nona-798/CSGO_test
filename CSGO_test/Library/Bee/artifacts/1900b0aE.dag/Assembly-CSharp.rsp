@@ -371,6 +371,7 @@
 "Assets/Test/Scripts/Casing.cs"
 "Assets/Test/Scripts/CasingMemoryPool.cs"
 "Assets/Test/Scripts/CharaMovementController.cs"
+"Assets/Test/Scripts/DestructibleBarrel.cs"
 "Assets/Test/Scripts/EnemyFSM.cs"
 "Assets/Test/Scripts/EnemyMemoryPool.cs"
 "Assets/Test/Scripts/EnemyProjectile.cs"
@@ -388,8 +389,14 @@
 "Assets/Test/Scripts/PlayerHUD.cs"
 "Assets/Test/Scripts/RotateToMouse.cs"
 "Assets/Test/Scripts/Status.cs"
+"Assets/Test/Scripts/Target.cs"
 "Assets/Test/Scripts/WeaponAssaultRifle.cs"
+"Assets/Test/Scripts/WeaponBase.cs"
+"Assets/Test/Scripts/WeaponGlock17.cs"
+"Assets/Test/Scripts/WeaponGrenade.cs"
+"Assets/Test/Scripts/WeaponKnife.cs"
 "Assets/Test/Scripts/WeaponSetting.cs"
+"Assets/Test/Scripts/WeaponSwitchSystem.cs"
 -langversion:9.0
 
 /deterministic

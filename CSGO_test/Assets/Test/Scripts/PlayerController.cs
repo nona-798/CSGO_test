@@ -21,9 +21,8 @@ public class PlayerController : MonoBehaviour
     private RotateToMouse               rotateToMouse;      // 카메라 회전
     private CharaMovementController     movement;           // 플레이어 이동
     private Status                      status;             // 플레이어 상태전환
-    private PlayerAnimationController   anim;               // 애니메이션 재생 제어
     private AudioSource                 audioSource;        // 사운드 재생 제어
-    private WeaponAssaultRifle          weapon;             // 무기를 이용한 공격 제어
+    private WeaponBase                  weapon;             // 무기를 이용한 공격 제어
 
     private void Awake()
     {
@@ -33,9 +32,7 @@ public class PlayerController : MonoBehaviour
         rotateToMouse       = GetComponent<RotateToMouse>();
         movement            = GetComponent<CharaMovementController>();
         status              = GetComponent<Status>();
-        anim                = GetComponent<PlayerAnimationController>();
         audioSource         = GetComponent<AudioSource>();
-        weapon              = GetComponentInChildren<WeaponAssaultRifle>();
     }
 
     private void Update()
@@ -57,16 +54,22 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
+        // 이동중일 때
         if(x != 0 || z != 0)
         {
             bool isWalk = false;
 
-            if (Input.GetKey(keyCodeWalk)) isWalk = true;
+            if (Input.GetKey(keyCodeWalk))
+            {
+                isWalk = true;
+            }
 
             movement.MoveSpeed  = isWalk == true ? status.WalkSpeed : status.RunSpeed;
-            anim.MoveSpeed      = isWalk == true ? 0.5f : 1;
+            weapon.Animator.MoveSpeed = isWalk == true ? 1.4f : 3.0f;
             audioSource.clip    = isWalk == true ? audioClipWalk : audioClipRun;
 
+            // 방향키 입력 여부는 매 프레임 확인하기 때문에
+            // 재생중일 때는 다시 재생하지 않도록 isPlaying으로 체크해서 재생
             if(audioSource.isPlaying == false)
             {
                 audioSource.loop = true;
@@ -74,10 +77,11 @@ public class PlayerController : MonoBehaviour
             }
 
         }
+        // 제자리에 멈춰있을 때
         else 
         { 
-            movement.MoveSpeed  = 0;
-            anim.MoveSpeed      = 0;
+            movement.MoveSpeed  = 0.0f;
+            weapon.Animator.MoveSpeed = 0.0f;
             if(audioSource.isPlaying == true)
             {
                 audioSource.Stop();
@@ -126,5 +130,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("GameOver");
         }
+    }
+    public void SwitchingWeapon(WeaponBase newWeapon)
+    {
+        weapon = newWeapon;
     }
 }
