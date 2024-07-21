@@ -16,4 +16,8 @@ public class WeaponGrenade : WeaponBase
     {
         
     }
+    public override void StartDryfire()
+    {
+        return;
+    }
 }

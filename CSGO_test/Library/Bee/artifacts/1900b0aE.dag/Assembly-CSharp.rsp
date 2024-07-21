@@ -395,6 +395,7 @@
 "Assets/Test/Scripts/WeaponGlock17.cs"
 "Assets/Test/Scripts/WeaponGrenade.cs"
 "Assets/Test/Scripts/WeaponKnife.cs"
+"Assets/Test/Scripts/WeaponKnifeCollider.cs"
 "Assets/Test/Scripts/WeaponSetting.cs"
 "Assets/Test/Scripts/WeaponSwitchSystem.cs"
 -langversion:9.0

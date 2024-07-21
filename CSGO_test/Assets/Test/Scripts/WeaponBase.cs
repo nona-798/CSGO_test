@@ -15,6 +15,8 @@ public abstract class WeaponBase : MonoBehaviour
                                                                    
     protected float                     lastAttackTime = 0;        // 마지막 발사시간 체크용
     protected bool                      isReload = false;          // 재장전 중인지 체크
+    protected bool                      isEmpty = false;           // 약실에 탄이 있는지 체크
+    protected bool                      isDryfire = false;         // 헛발사 중인지 체크
     protected bool                      isAttack = false;          // 공격 여부  체크용
     protected AudioSource               audioSource;               // 사운드 재생 컴포넌트
     protected PlayerAnimationController animator;                  // 애니메이션 재생 제어
@@ -34,6 +36,7 @@ public abstract class WeaponBase : MonoBehaviour
     public abstract void StartWeaponAction(int type = 0);
     public abstract void StopWeaponAction(int type = 0);
     public abstract void StartReload();
+    public abstract void StartDryfire();
 
     protected void PlaySound(AudioClip clip)
     {

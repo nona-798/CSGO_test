@@ -16,9 +16,11 @@ public class WeaponAssaultRifle : WeaponBase
 
     [Header("Audio Clips")]
     [SerializeField]
-    private AudioClip                   audioClipTakeOutRifle;         // 총기 장착 사운드
+    private AudioClip                   audioClipTakeOut;         // 총기 장착 사운드
     [SerializeField]
     private AudioClip                   audioClipFire;                 // 발사 사운드
+    [SerializeField]
+    private AudioClip                   audioClipDryFire;              // 헛발사 사운드
     [SerializeField]
     private AudioClip                   audioClipReload;               // 탄약 있을 때 재장전 사운드
     [SerializeField]
@@ -28,7 +30,7 @@ public class WeaponAssaultRifle : WeaponBase
     [SerializeField]
     private Image                       img_Aim;                       // default/aim 모드에 따라 aim 이미지 활성/비활성
 
-    private bool isModeChange = false;
+    private bool isAimChange = false;
     private float defaultModeFOV = 60;
     private float aimModeFOV = 30;
 
@@ -45,21 +47,19 @@ public class WeaponAssaultRifle : WeaponBase
         impactMemoryPool = GetComponent<ImpactMemoryPool>();
         mainCamera       = Camera.main;
 
-        // 처음 탄창 수는 최대로 설정
+        // 처음 탄창 & 탄약 수는 최대로 설정
         weaponSetting.currentMag = weaponSetting.maxMag;
-        // 처음 탄약 수는 최대로 설정
         weaponSetting.currentAmmo = weaponSetting.maxAmmo;
     }
     private void OnEnable()
     {
         // 무기 장착 사운드 재생
-        PlaySound(audioClipTakeOutRifle);
+        PlaySound(audioClipTakeOut);
         // 총구 이펙트 오브젝트 비활성화
         fireFlashEffect.SetActive(false);
 
-        // 무기가 활성화될 때 해당 무기의 탄창 수 정보를 갱신한다.
+        // 무기가 활성화될 때 해당 무기의 탄창 & 탄약 수 정보를 갱신한다.
         onMagazineEvent.Invoke(weaponSetting.currentMag);
-        // 무기가 활성화될 때 해당 무기의 탄약 수 정보를 갱신한다.
         onAmmoEvent.Invoke(weaponSetting.currentAmmo, weaponSetting.maxAmmo);
 
         ResetVariables();
@@ -70,13 +70,19 @@ public class WeaponAssaultRifle : WeaponBase
         if (isReload == true) return;
 
         // 모드 전환 중이면 무기 액션을 할 수 없다.
-        if (isModeChange == true) return;
+        if (isAimChange == true) return;
+
+        // 만약 공실에 탄이 없다면 무기 액션을 할 수 없다.
+        //if (isEmpty == true)
+        //{
+        //    StartDryfire();
+        //}
 
         // 마우스 왼쪽 클릭 (공격 시작)
         if (type == 0)
         {
             // 연발
-            if(weaponSetting.isAutomaticAttack == true)
+            if (weaponSetting.isAutomaticAttack == true)
             {
                 isAttack = true;
                 StartCoroutine("OnAttackLoop");
@@ -93,8 +99,9 @@ public class WeaponAssaultRifle : WeaponBase
             // 공격 중일 때는 모드 전환을 할 수 없다.
             if (isAttack == true) return;
 
-            StartCoroutine("OnModeChange");
-        }    
+            StartCoroutine("OnAimChange");
+        }
+          
     }
     public override void StopWeaponAction(int type = 0)
     {
@@ -115,6 +122,15 @@ public class WeaponAssaultRifle : WeaponBase
         StopWeaponAction();
 
         StartCoroutine("OnReload");
+    }
+    public override void StartDryfire()
+    {
+        if (isAttack == true) return;
+        if (isReload == true) return;
+        if (isDryfire == true) return;
+        StopWeaponAction();
+
+        StartCoroutine("OnDryFire");
     }
     private IEnumerator OnAttackLoop()
     {
@@ -139,6 +155,7 @@ public class WeaponAssaultRifle : WeaponBase
             // 탄약 수가 모자라면 공격 불가능
             if(weaponSetting.currentAmmo <= 0)
             {
+                animator.ChamberIs = false;
                 return;
             }
 
@@ -147,13 +164,14 @@ public class WeaponAssaultRifle : WeaponBase
             onAmmoEvent.Invoke(weaponSetting.currentAmmo, weaponSetting.maxAmmo);
 
             // 무기 애니메이션 재생 (모드에 따라 AimFir or Fire 재생)
-            string animation = base.animator.AimModeIs == true ? "AimFire" : "Fire";
-            base.animator.Play(animation, -1, 0);
+            string animation = animator.AimModeIs == true ? "AimFire" : "Fire";
+            animator.Play(animation, -1, 0);
             // 총구 이펙트 재생
-            if(base.animator.AimModeIs == false) StartCoroutine("OnFireFlashEffect");
+            if(animator.AimModeIs == false) StartCoroutine("OnFireFlashEffect");
             
             // 발사 사운드 재생
             PlaySound(audioClipFire);
+
             // 탄피 생성
             casingMemoryPool.SpawnCasing(casingSpwanPos.position, transform.right);
 
@@ -169,41 +187,62 @@ public class WeaponAssaultRifle : WeaponBase
     }
     private IEnumerator OnReload()
     {
+        // 재장전 체크
         isReload = true;
-        bool isAmmo = false;
+
         // 재장전 애니메이션, 사운드 재생
-        base.animator.OnReload();
+        animator.OnReload();
 
         // 남은 탄약이 1발 이상이라면 isAmmo = true
         if (weaponSetting.currentAmmo >= 1)
         {
-            isAmmo = true;
+            animator.ChamberIs = true;
         }
+        else animator.ChamberIs = false;
 
         // animtor.Ammo 결과 값에 따라 0 or 1, audioClip도 결과 값에 따라 바꿈
-        base.animator.Ammo = isAmmo == true ? 1.0f : 0.0f;
-        audioSource.clip = isAmmo == true ? audioClipReload : audioClipOutReload;
+        animator.Ammo    = animator.ChamberIs == true ? 1 : 0;
+        audioSource.clip = animator.ChamberIs == true ? audioClipReload : audioClipOutReload;
 
-        audioSource.Play();
+        PlaySound(audioSource.clip);
 
-        while(true)
+        while (true)
         {
             // 사운드가 재생 중이 아니고, 현재 애니메이션이 Reload가 아니라면
             // 재장전 애니메이션, 사운드 재생이 종료되었다는 뜻
-            if (audioSource.isPlaying == false && !base.animator.CurrentAnimationIs("Reload"))
+            if (audioSource.isPlaying == false && !animator.CurrentAnimationIs("Reload"))
             {
                 isReload = false;
-                
                 // 현재 탄창 수를 1 감소시키고, 바뀐 탄창 수 정보를 Text UI에 업데이트
                 weaponSetting.currentMag--;
                 onMagazineEvent.Invoke(weaponSetting.currentMag);
+
                 // 현재 탄약 수를 최대로 설정하고, 바뀐 탄약 수 정보를 Text UI에 업데이트
                 weaponSetting.currentAmmo = weaponSetting.maxAmmo;
-                if (isAmmo == true)
+
+                if (animator.ChamberIs == true)
                 {
-                    weaponSetting.currentAmmo = weaponSetting.maxAmmo + 1;
+                    weaponSetting.currentAmmo += 1;
                 }
+
                 onAmmoEvent.Invoke(weaponSetting.currentAmmo, weaponSetting.maxAmmo);
+
+                yield break;
+            }
+            yield return null;
+        }
+    }
+    private IEnumerator OnDryFire()
+    {
+        isDryfire = true;
+
+        animator.OnEmpty();
+        PlaySound(audioClipDryFire);
+        while (true)
+        {
+            if (audioSource.isPlaying == false && !animator.CurrentAnimationIs("Stop"))
+            {
+                isDryfire = false;
 
                 yield break;
             }
@@ -244,13 +283,12 @@ public class WeaponAssaultRifle : WeaponBase
             else if( hit.transform.CompareTag("InteractionObject"))
             {
                 hit.transform.GetComponent<InteractionObject>().TakeDamage(weaponSetting.damage);
-                Debug.Log("Hit");
             }
         }
         Debug.DrawRay(bulletSpwanPos.position, atkDir * weaponSetting.attackDis, Color.blue);
     }
 
-    private IEnumerator OnModeChange()
+    private IEnumerator OnAimChange()
     {
         float current = 0;
         float percent = 0;
@@ -261,14 +299,14 @@ public class WeaponAssaultRifle : WeaponBase
 
         float start = mainCamera.fieldOfView;
         float end = animator.AimModeIs == true ? aimModeFOV : defaultModeFOV;
-        isModeChange = true;
+        isAimChange = true;
 
         while(percent < 1)
         {
             current += Time.deltaTime;
             percent = current / time;
 
-            isModeChange = true;
+            isAimChange = true;
 
             // 모드에 따라 카메라 변경
             mainCamera.fieldOfView = Mathf.Lerp(start, end, percent);
@@ -276,13 +314,13 @@ public class WeaponAssaultRifle : WeaponBase
             yield return null;
         }
 
-        isModeChange = false;
+        isAimChange = false;
     }
     
     private void ResetVariables()
     {
         isReload     = false;
         isAttack     = false;
-        isModeChange = false;
+        isAimChange = false;
     }
 }
