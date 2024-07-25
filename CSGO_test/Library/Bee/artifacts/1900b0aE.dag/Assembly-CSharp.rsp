@@ -394,6 +394,7 @@
 "Assets/Test/Scripts/WeaponBase.cs"
 "Assets/Test/Scripts/WeaponGlock17.cs"
 "Assets/Test/Scripts/WeaponGrenade.cs"
+"Assets/Test/Scripts/WeaponGrenadeProjectile.cs"
 "Assets/Test/Scripts/WeaponKnife.cs"
 "Assets/Test/Scripts/WeaponKnifeCollider.cs"
 "Assets/Test/Scripts/WeaponSetting.cs"
