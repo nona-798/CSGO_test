@@ -1,0 +1,11 @@
+Player
+- Movement
+
+float moveSpeed;
+float acceleration;
+float stopSpeed;
+float currentSpeed;
+
+Move
+{
+	

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[System.Serializable]
 public class HPEvent : UnityEngine.Events.UnityEvent<int, int> { }
+[System.Serializable]
 public class Status : MonoBehaviour
 {
     [HideInInspector]
