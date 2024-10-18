@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class PlayerAnimationController : MonoBehaviour
 {
     private Animator anim;
@@ -10,14 +9,14 @@ public class PlayerAnimationController : MonoBehaviour
         // arm_ ~ rifle_01 오브젝트에 Animator 컴포넌트가 있음
         anim = GetComponentInChildren<Animator>();
     }
-    /// <summary> Reload 트리거 함수 </summary>
 
+    /// <summary> Reload 트리거 함수 </summary>
     public void OnReload()
     {
         anim.SetTrigger("OnReload");
     }
-    ///  <summary> Empty 트리거 함수 </summary>
 
+    ///  <summary> Empty 트리거 함수 </summary>
     public void OnEmpty()
     {
         anim.SetTrigger("OnEmpty");
@@ -29,24 +28,28 @@ public class PlayerAnimationController : MonoBehaviour
         set => anim.SetFloat("MoveSpeed", value);
         get => anim.GetFloat("MoveSpeed");
     }
+
     /// <summary> Reload 분기점 변수 </summary>
     public float Ammo
     {
         set => anim.SetFloat("Ammo", value);
         get => anim.GetFloat("Ammo");
     }
+
     /// <summary> Assault Rifle 마우스 오른쪽 클릭 액션 (default/ aim mode) </summary>
     public bool AimModeIs
     {
         set => anim.SetBool("IsAimMode", value);
         get => anim.GetBool("IsAimMode");
     }
+
     /// <summary> 약실 체크용 함수. 약실에 탄이 있다면 true, 없으면 false </summary>
     public bool ChamberIs
     {
         set => anim.SetBool("IsChamber", value);
         get => anim.GetBool("IsChamber");
     }
+
     /// <summary> 애니메이션 재생 함수(animName, Layer, norTime) </summary>
     public void Play(string stateName, int layer, float normalizedTime)
     {
